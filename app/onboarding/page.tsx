@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,12 +10,14 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ArrowRight, Leaf } from "lucide-react"
+import { saveUserProfile } from "@/server/db/queries"
 
 export default function OnboardingPage() {
+  const [isPending, startTransition] = useTransition()
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [profile, setProfile] = useState({
-    age: "",
+    age: 0,
     gender: "male",
     weight: "",
     height: "",
@@ -31,9 +33,14 @@ export default function OnboardingPage() {
     if (step < 3) {
       setStep(step + 1)
     } else {
-      // Save profile to cookies
-      document.cookie = `user-profile=${JSON.stringify(profile)}; path=/; max-age=${60 * 60 * 24 * 30}`
-      router.push("/dashboard")
+      startTransition(async () => {
+        try {
+          await saveUserProfile(profile)
+          router.push("/dashboard")
+        } catch (error) {
+          console.error("Failed to save profile", error)
+        }
+      })
     }
   }
 

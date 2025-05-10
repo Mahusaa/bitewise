@@ -1,107 +1,95 @@
-import { index, pgTableCreator, primaryKey } from "drizzle-orm/pg-core"
-import { sql, relations } from "drizzle-orm";
-import { type AdapterAccount } from "next-auth/adapters";
+import { integer, pgTableCreator, serial, varchar, decimal, text, timestamp, boolean } from "drizzle-orm/pg-core"
+import { InferInsertModel } from "drizzle-orm";
 
 
 
 export const createTable = pgTableCreator((name) => `bitewise_${name}`);
 
-export const posts = createTable(
-  "post",
-  (d) => ({
-    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    name: d.varchar({ length: 256 }),
-    createdById: d
-      .varchar({ length: 255 })
-      .notNull()
-      .references(() => users.id),
-    createdAt: d
-      .timestamp({ withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
-  }),
-  (t) => [
-    index("created_by_idx").on(t.createdById),
-    index("name_idx").on(t.name),
-  ],
-);
 
-export const users = createTable("user", (d) => ({
-  id: d
-    .varchar({ length: 255 })
-    .notNull()
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: d.varchar({ length: 255 }),
-  email: d.varchar({ length: 255 }).notNull(),
-  password: d.varchar({ length: 255 }),
-  emailVerified: d
-    .timestamp({
-      mode: "date",
-      withTimezone: true,
-    })
-    .default(sql`CURRENT_TIMESTAMP`),
-  image: d.varchar({ length: 255 }),
-}));
+export const user = createTable("user", {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  emailVerified: boolean('email_verified').notNull(),
+  image: text('image'),
+  createdAt: timestamp('created_at').notNull(),
+  updatedAt: timestamp('updated_at').notNull()
+});
 
-export const usersRelations = relations(users, ({ many }) => ({
-  accounts: many(accounts),
-}));
+export const session = createTable("session", {
+  id: text('id').primaryKey(),
+  expiresAt: timestamp('expires_at').notNull(),
+  token: text('token').notNull().unique(),
+  createdAt: timestamp('created_at').notNull(),
+  updatedAt: timestamp('updated_at').notNull(),
+  ipAddress: text('ip_address'),
+  userAgent: text('user_agent'),
+  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' })
+});
 
-export const accounts = createTable(
-  "account",
-  (d) => ({
-    userId: d
-      .varchar({ length: 255 })
-      .notNull()
-      .references(() => users.id),
-    type: d.varchar({ length: 255 }).$type<AdapterAccount["type"]>().notNull(),
-    provider: d.varchar({ length: 255 }).notNull(),
-    providerAccountId: d.varchar({ length: 255 }).notNull(),
-    refresh_token: d.text(),
-    access_token: d.text(),
-    expires_at: d.integer(),
-    token_type: d.varchar({ length: 255 }),
-    scope: d.varchar({ length: 255 }),
-    id_token: d.text(),
-    session_state: d.varchar({ length: 255 }),
-  }),
-  (t) => [
-    primaryKey({ columns: [t.provider, t.providerAccountId] }),
-    index("account_user_id_idx").on(t.userId),
-  ],
-);
+export const account = createTable("account", {
+  id: text('id').primaryKey(),
+  accountId: text('account_id').notNull(),
+  providerId: text('provider_id').notNull(),
+  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  accessToken: text('access_token'),
+  refreshToken: text('refresh_token'),
+  idToken: text('id_token'),
+  accessTokenExpiresAt: timestamp('access_token_expires_at'),
+  refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
+  scope: text('scope'),
+  password: text('password'),
+  createdAt: timestamp('created_at').notNull(),
+  updatedAt: timestamp('updated_at').notNull()
+});
 
-export const accountsRelations = relations(accounts, ({ one }) => ({
-  user: one(users, { fields: [accounts.userId], references: [users.id] }),
-}));
-
-export const sessions = createTable(
-  "session",
-  (d) => ({
-    sessionToken: d.varchar({ length: 255 }).notNull().primaryKey(),
-    userId: d
-      .varchar({ length: 255 })
-      .notNull()
-      .references(() => users.id),
-    expires: d.timestamp({ mode: "date", withTimezone: true }).notNull(),
-  }),
-  (t) => [index("t_user_id_idx").on(t.userId)],
-);
-
-export const sessionsRelations = relations(sessions, ({ one }) => ({
-  user: one(users, { fields: [sessions.userId], references: [users.id] }),
-}));
-
-export const verificationTokens = createTable(
-  "verification_token",
-  (d) => ({
-    identifier: d.varchar({ length: 255 }).notNull(),
-    token: d.varchar({ length: 255 }).notNull(),
-    expires: d.timestamp({ mode: "date", withTimezone: true }).notNull(),
-  }),
-  (t) => [primaryKey({ columns: [t.identifier, t.token] })],
-);
+export const verification = createTable("verification", {
+  id: text('id').primaryKey(),
+  identifier: text('identifier').notNull(),
+  value: text('value').notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at'),
+  updatedAt: timestamp('updated_at')
+});
 
 
+export const userProfiles = createTable("user_profiles", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  age: integer("age").notNull(),
+  gender: varchar("gender").notNull(),
+  weight: varchar("weight").notNull(),
+  height: varchar("height").notNull(),
+  activityLevel: varchar("activity_level").notNull(),
+  goal: varchar("goal").notNull(),
+});
+
+
+export const nutritionGoals = createTable("nutrition_goals", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  calories: decimal("calories", { precision: 7, scale: 2 }).notNull(),
+  protein: decimal("protein", { precision: 7, scale: 2 }).notNull(),
+  carbs: decimal("carbs", { precision: 7, scale: 2 }).notNull(),
+  fat: decimal("fat", { precision: 7, scale: 2 }).notNull(),
+})
+
+
+export const meals = createTable("meals", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  name: varchar("name", { length: 255 }).notNull(),
+  categories: varchar("categories").notNull(),
+  calories: decimal("calories", { precision: 7, scale: 2 }).notNull(),
+  protein: decimal("protein", { precision: 7, scale: 2 }).notNull(),
+  carbs: decimal("carbs", { precision: 7, scale: 2 }).notNull(),
+  fat: decimal("fat", { precision: 7, scale: 2 }).notNull(),
+  sugar: decimal("sugar", { precision: 7, scale: 2 }).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  image: text("image"),
+})
+
+
+export type NewUserProfile = InferInsertModel<typeof userProfiles>
+export type UserProfile = typeof userProfiles.$inferSelect
+export type NutritionGoals = typeof nutritionGoals.$inferSelect

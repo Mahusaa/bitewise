@@ -1,15 +1,26 @@
 "use client"
-
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
 import { ChevronUp, Plus, Utensils } from "lucide-react"
 import { MealList } from "@/components/meal-list"
-import type { FoodEntry } from "@/lib/types"
-import { useRouter } from "next/navigation"
+
+export interface MealEntry {
+  id: number;
+  name: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  sugar: number;
+  categories: string;
+  createdAt: Date;
+  image?: string;
+}
 
 interface MealsDrawerProps {
-  entries: FoodEntry[]
+  entries: MealEntry[];
 }
 
 export function MealsDrawer({ entries }: MealsDrawerProps) {
@@ -54,4 +65,3 @@ export function MealsDrawer({ entries }: MealsDrawerProps) {
     </Drawer>
   )
 }
-

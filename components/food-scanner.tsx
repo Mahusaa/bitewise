@@ -76,7 +76,6 @@ export function FoodScanner() {
         <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 text-center">
           <div className="flex justify-center items-center space-x-2 mb-4">
             <Camera className="h-8 w-8 text-muted-foreground" />
-            <FileImage className="h-8 w-8 text-muted-foreground" />
           </div>
           <p className="text-sm text-muted-foreground mb-6">
             Take a photo of your food or select an image from your gallery

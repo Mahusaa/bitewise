@@ -43,7 +43,7 @@ export default function AddFoodPage() {
         <h1 className="text-xl font-bold ml-2">Add Food</h1>
       </header>
 
-      <Tabs defaultValue="search" className="w-full">
+      <Tabs defaultValue="search" className="">
         <TabsList className="grid grid-cols-2 mb-6">
           <TabsTrigger value="search">
             <Search className="h-4 w-4 mr-2" />

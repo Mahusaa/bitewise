@@ -1,7 +1,7 @@
 "use client"
 
 import { Progress } from "@/components/ui/progress"
-import type { NutritionGoals } from "@/lib/types"
+import type { NutritionGoals } from "@/server/db/schema"
 
 interface DailyNutritionProgressProps {
   nutritionGoals: NutritionGoals
@@ -19,10 +19,10 @@ export function DailyNutritionProgress({ nutritionGoals, todayTotals }: DailyNut
     return Math.min(Math.round((current / goal) * 100), 100)
   }
 
-  const caloriesPercentage = calculatePercentage(todayTotals.calories, nutritionGoals.calories)
-  const proteinPercentage = calculatePercentage(todayTotals.protein, nutritionGoals.protein)
-  const carbsPercentage = calculatePercentage(todayTotals.carbs, nutritionGoals.carbs)
-  const fatPercentage = calculatePercentage(todayTotals.fat, nutritionGoals.fat)
+  const caloriesPercentage = calculatePercentage(todayTotals.calories, parseInt(nutritionGoals.calories))
+  const proteinPercentage = calculatePercentage(todayTotals.protein, parseInt(nutritionGoals.protein))
+  const carbsPercentage = calculatePercentage(todayTotals.carbs, parseInt(nutritionGoals.carbs))
+  const fatPercentage = calculatePercentage(todayTotals.fat, parseInt(nutritionGoals.fat))
 
   return (
     <div className="space-y-4">
@@ -72,7 +72,7 @@ export function DailyNutritionProgress({ nutritionGoals, todayTotals }: DailyNut
           <span className="font-medium">{todayTotals.sugar.toFixed(1)} g</span>
         </div>
         <div className="text-xs text-muted-foreground">
-          Recommended: Keep sugar intake below {Math.round(nutritionGoals.carbs * 0.1)} g
+          Recommended: Keep sugar intake below {Math.round(parseInt(nutritionGoals.carbs) * 0.1)} g
         </div>
       </div>
     </div>

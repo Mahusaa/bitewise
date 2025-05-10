@@ -2,22 +2,23 @@
 
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
-import type { FoodEntry } from "@/lib/types"
+import { MealEntry } from "./meals-drawer"
+import { Utensils } from "lucide-react"
 
 interface MealListProps {
-  entries: FoodEntry[]
+  entries: MealEntry[]
 }
 
 export function MealList({ entries }: MealListProps) {
   // Group entries by meal type
   const mealGroups = entries.reduce((groups, entry) => {
-    const group = groups[entry.mealType] || []
+    const group = groups[entry.categories] || []
     group.push(entry)
-    groups[entry.mealType] = group
+    groups[entry.categories] = group
     return groups
   }, {})
 
-  const mealTypes = ["Breakfast", "Lunch", "Dinner", "Snacks"]
+  const mealTypes = ["breakfast", "lunch", "dinner", "snacks"]
 
   return (
     <div className="space-y-4">
@@ -32,15 +33,20 @@ export function MealList({ entries }: MealListProps) {
               <Card key={index} className="overflow-hidden">
                 <CardContent className="p-0">
                   <div className="flex items-center p-2">
-                    <div className="h-12 w-12 rounded-md overflow-hidden mr-3">
-                      <Image
-                        src={entry.image || "/placeholder.svg?height=48&width=48"}
-                        alt={entry.name}
-                        width={48}
-                        height={48}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
+                    {entry.image ? (
+                      <div className="h-12 w-12 rounded-md overflow-hidden mr-3">
+                        <Image
+                          src={entry.image || "/placeholder.svg?height=48&width=48"}
+                          alt={entry.name}
+                          width={48}
+                          height={48}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <Utensils className="text-muted-foreground h-6 w-6" />
+                    )}
+
                     <div className="flex-1">
                       <h4 className="text-sm font-medium">{entry.name}</h4>
                       <p className="text-xs text-muted-foreground">

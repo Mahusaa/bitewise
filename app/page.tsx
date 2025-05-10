@@ -1,14 +1,26 @@
 import { redirect } from "next/navigation"
-import { cookies } from "next/headers"
+import { hasProfile } from "@/server/db/queries"
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
-export default function Home() {
-  const cookieStore = cookies()
-  const hasProfile = cookieStore.has("user-profile")
+export default async function Home() {
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+  const userId = session?.user?.id;
 
-  if (!hasProfile) {
-    redirect("/onboarding")
+  if (!userId) {
+    console.log("user not auth")
+    return null
+  };
+  const profile = await hasProfile(userId)
+
+  if (!profile) {
+    console.log("U dont have profile")
+    //   redirect("/onboarding")
   } else {
-    redirect("/dashboard")
+    console.log("u have profile")
+    // redirect("/dashboard")
   }
 }
 

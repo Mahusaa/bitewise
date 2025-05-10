@@ -1,8 +1,7 @@
-import type { UserProfile, NutritionGoals } from "./types"
+import type { UserProfile, NutritionGoals } from "@/server/db/schema"
 
 export function calculateNutritionGoals(profile: UserProfile): NutritionGoals {
-  // Parse profile values
-  const age = Number.parseInt(profile.age)
+  const age = (profile.age)
   const weight = Number.parseInt(profile.weight)
   const height = Number.parseInt(profile.height)
   const gender = profile.gender
@@ -16,7 +15,6 @@ export function calculateNutritionGoals(profile: UserProfile): NutritionGoals {
     bmr = 10 * weight + 6.25 * height - 5 * age - 161
   }
 
-  // Apply activity multiplier
   let activityMultiplier = 1.2 // sedentary
   switch (activityLevel) {
     case "light":
@@ -43,7 +41,6 @@ export function calculateNutritionGoals(profile: UserProfile): NutritionGoals {
     case "weight-gain":
       tdee = tdee * 1.15 // 15% surplus
       break
-    // maintenance stays the same
   }
 
   // Round calories to nearest 50
@@ -61,13 +58,12 @@ export function calculateNutritionGoals(profile: UserProfile): NutritionGoals {
   const protein = Math.round(weight * proteinPerKg)
 
   // Fat: 25-35% of calories
-  const fatCalories = calories * 0.3 // 30% of calories
-  const fat = Math.round(fatCalories / 9) // 9 calories per gram of fat
+  const fatCalories = calories * 0.3
+  const fat = Math.round(fatCalories / 9)
 
-  // Remaining calories from carbs
-  const proteinCalories = protein * 4 // 4 calories per gram of protein
+  const proteinCalories = protein * 4
   const carbCalories = calories - proteinCalories - fatCalories
-  const carbs = Math.round(carbCalories / 4) // 4 calories per gram of carbs
+  const carbs = Math.round(carbCalories / 4)
 
   return {
     calories,
