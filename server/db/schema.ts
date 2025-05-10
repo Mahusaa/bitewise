@@ -93,3 +93,4 @@ export const meals = createTable("meals", {
 export type NewUserProfile = InferInsertModel<typeof userProfiles>
 export type UserProfile = typeof userProfiles.$inferSelect
 export type NutritionGoals = typeof nutritionGoals.$inferSelect
+export type NewMealData = InferInsertModel<typeof meals>

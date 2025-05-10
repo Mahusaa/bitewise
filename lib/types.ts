@@ -1,4 +1,6 @@
 import { z } from "zod";
+
+
 export interface UserProfile {
   age: string
   gender: string
@@ -27,6 +29,30 @@ export interface FoodEntry {
   mealType: string
   image?: string
 }
+
+export const extractMealSchema = z.object({
+  name: z.string().max(255).describe("Name of the meal"),
+  calories: z
+    .string()
+    .regex(/^\d+(\.\d{1,2})?$/)
+    .describe("Total calories, decimal with max 2 digits after decimal in kcal"),
+  protein: z
+    .string()
+    .regex(/^\d+(\.\d{1,2})?$/)
+    .describe("Protein content in grams"),
+  carbs: z
+    .string()
+    .regex(/^\d+(\.\d{1,2})?$/)
+    .describe("Carbohydrates in grams"),
+  fat: z
+    .string()
+    .regex(/^\d+(\.\d{1,2})?$/)
+    .describe("Fat content in grams"),
+  sugar: z
+    .string()
+    .regex(/^\d+(\.\d{1,2})?$/)
+    .describe("Sugar content in grams"),
+})
 
 
 export const SignUpSchema = z.object({

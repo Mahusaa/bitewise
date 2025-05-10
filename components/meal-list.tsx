@@ -11,7 +11,7 @@ interface MealListProps {
 
 export function MealList({ entries }: MealListProps) {
   // Group entries by meal type
-  const mealGroups = entries.reduce((groups, entry) => {
+  const mealGroups: Record<string, MealEntry[]> = entries.reduce((groups: Record<string, MealEntry[]>, entry) => {
     const group = groups[entry.categories] || []
     group.push(entry)
     groups[entry.categories] = group
@@ -49,9 +49,6 @@ export function MealList({ entries }: MealListProps) {
 
                     <div className="flex-1">
                       <h4 className="text-sm font-medium">{entry.name}</h4>
-                      <p className="text-xs text-muted-foreground">
-                        {entry.servingSize} • {entry.calories} kcal
-                      </p>
                     </div>
                     <div className="text-right text-xs">
                       <div>P: {entry.protein}g</div>

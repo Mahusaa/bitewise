@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import SignOut from "../(auth)/signout";
 
 
 
@@ -15,6 +16,7 @@ export default async function Page() {
       <p>{userId}</p>
       <p>{name}</p>
       <p>{email}</p>
+      <SignOut />
     </div>
   )
 

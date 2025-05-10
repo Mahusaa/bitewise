@@ -64,12 +64,13 @@ export function calculateNutritionGoals(profile: UserProfile): NutritionGoals {
   const proteinCalories = protein * 4
   const carbCalories = calories - proteinCalories - fatCalories
   const carbs = Math.round(carbCalories / 4)
-
   return {
-    calories,
-    protein,
-    carbs,
-    fat,
-  }
+    id: profile.id,
+    userId: profile.userId,
+    calories: calories.toString(),
+    protein: protein.toString(),
+    carbs: carbs.toString(),
+    fat: fat.toString(),
+  };
 }
 

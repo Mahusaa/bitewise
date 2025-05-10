@@ -11,12 +11,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ArrowRight, Leaf } from "lucide-react"
 import { saveUserProfile } from "@/server/db/queries"
+import { useSession } from "@/lib/auth-client"
+import { Loader2 } from "lucide-react"
 
 export default function OnboardingPage() {
-  const [isPending, startTransition] = useTransition()
   const router = useRouter()
+  const [isPending, startTransition] = useTransition()
+  const { data } = useSession();
+  const userId = data?.user.id
+  if (!userId) router.push("/signin")
   const [step, setStep] = useState(1)
   const [profile, setProfile] = useState({
+    userId: userId ?? "",
     age: 0,
     gender: "male",
     weight: "",
@@ -25,7 +31,7 @@ export default function OnboardingPage() {
     goal: "maintenance",
   })
 
-  const handleChange = (field, value) => {
+  const handleChange = (field: keyof typeof profile, value: string | number) => {
     setProfile({ ...profile, [field]: value })
   }
 
@@ -63,7 +69,7 @@ export default function OnboardingPage() {
       <Card>
         <CardHeader>
           <CardTitle>Create Your Profile</CardTitle>
-          <CardDescription>We'll use this information to calculate your nutritional needs</CardDescription>
+          <CardDescription>We&apos;ll use this information to calculate your nutritional needs</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs value={`step-${step}`} className="w-full">
@@ -168,9 +174,22 @@ export default function OnboardingPage() {
           </Tabs>
         </CardContent>
         <CardFooter>
-          <Button className="w-full" onClick={handleNext} disabled={!isStepValid()}>
-            {step < 3 ? "Next" : "Complete Setup"}
-            <ArrowRight className="ml-2 h-4 w-4" />
+          <Button
+            className="w-full flex items-center justify-center"
+            onClick={handleNext}
+            disabled={!isStepValid() || isPending}
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                {step < 3 ? "Next" : "Complete Setup"}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </>
+            )}
           </Button>
         </CardFooter>
       </Card>

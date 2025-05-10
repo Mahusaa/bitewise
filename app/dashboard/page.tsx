@@ -1,9 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Settings, Utensils } from "lucide-react"
 import { calculateNutritionGoals } from "@/lib/nutrition-calculator"
-import type { NutritionGoals, UserProfile, FoodEntry } from "@/lib/types"
 import { DailyNutritionProgress } from "@/components/daily-nutrition-progress"
 import { BottomNavbar } from "@/components/bottom-navbar"
 import { MealsDrawer } from "@/components/meals-drawer"
@@ -12,16 +10,9 @@ import { getTodayMeals } from "@/server/db/queries"
 import { getProfile } from "@/server/db/queries"
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
+import { calculateMealTotals } from "@/lib/calculate-meals-today"
 
 export default async function DashboardPage() {
-  const dummyTodayTotals = {
-    calories: 1500,
-    protein: 75,
-    carbs: 180,
-    fat: 50,
-    sugar: 40,
-  }
-
   const session = await auth.api.getSession({
     headers: await headers()
   });
@@ -29,30 +20,14 @@ export default async function DashboardPage() {
   if (!userId) {
     throw new Error("Profile not found")
   }
-  const meals = await getTodayMeals(userId)
+  const meals = await getTodayMeals(userId);
+  const mealsToday = calculateMealTotals(meals)
 
   const profile = await getProfile(userId);
   if (!profile) {
     throw new Error("Profile not found")
   }
   const nutritionGoals = calculateNutritionGoals(profile)
-
-
-  // const [todayEntries, setTodayEntries] = useState<FoodEntry[]>([])
-  // const [todayTotals, setTodayTotals] = useState({
-  //   calories: 0,
-  //   protein: 0,
-  //   carbs: 0,
-  //   fat: 0,
-  //   sugar: 0,
-  // })
-  //
-  // const refreshMeals = () => {
-  //   const meals = getTodayMeals()
-  //   setTodayEntries(meals)
-  //   setTodayTotals(calculateTotals(meals))
-  // }
-
 
   return (
     <div className="container max-w-md mx-auto px-4 py-6 pb-20">
@@ -66,8 +41,6 @@ export default async function DashboardPage() {
         </Button>
       </header>
 
-
-
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg">Daily Goals</CardTitle>
@@ -76,7 +49,7 @@ export default async function DashboardPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <DailyNutritionProgress nutritionGoals={nutritionGoals} todayTotals={dummyTodayTotals} />
+          <DailyNutritionProgress nutritionGoals={nutritionGoals} todayTotals={mealsToday} />
         </CardContent>
       </Card>
       <MealsDrawer entries={meals} />

@@ -9,14 +9,14 @@ import { MealList } from "@/components/meal-list"
 export interface MealEntry {
   id: number;
   name: string;
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  sugar: number;
+  calories: string;
+  protein: string;
+  carbs: string;
+  fat: string;
+  sugar: string;
   categories: string;
   createdAt: Date;
-  image?: string;
+  image: string | null;
 }
 
 interface MealsDrawerProps {
@@ -32,12 +32,12 @@ export function MealsDrawer({ entries }: MealsDrawerProps) {
       <DrawerTrigger asChild>
         <Button
           variant="outline"
-          className="w-full flex items-center justify-between border rounded-lg p-3 shadow-sm"
+          className="w-full flex items-center justify-between border rounded-lg p-3 shadow-sm mt-5"
           onClick={() => setOpen(true)}
         >
           <div className="flex items-center">
             <Utensils className="h-5 w-5 text-green-500 mr-2" />
-            <span>Today's Meals</span>
+            <span>Todays Meals</span>
           </div>
           <div className="flex items-center">
             <span className="text-sm text-muted-foreground mr-2">{entries.length} items</span>
@@ -47,7 +47,7 @@ export function MealsDrawer({ entries }: MealsDrawerProps) {
       </DrawerTrigger>
       <DrawerContent className="max-h-[85vh] overflow-auto">
         <DrawerHeader className="flex justify-between items-center">
-          <DrawerTitle>Today's Meals</DrawerTitle>
+          <DrawerTitle>Todays Meals</DrawerTitle>
           <Button
             size="sm"
             onClick={() => {

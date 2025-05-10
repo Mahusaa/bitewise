@@ -5,7 +5,6 @@ import { and, between, eq } from "drizzle-orm";
 import { meals } from "./schema";
 
 
-
 export async function saveUserProfile(profile: NewUserProfile) {
   await db.insert(userProfiles).values({
     userId: profile.userId,
@@ -45,4 +44,5 @@ export async function getTodayMeals(userId: string) {
   })
   return result
 }
+
 

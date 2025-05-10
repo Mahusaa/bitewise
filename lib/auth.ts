@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/server/db";
 import { user, account, session, verification } from "@/server/db/schema";
+import { nextCookies } from "better-auth/next-js";
 export const auth = betterAuth({
   emailAndPassword: {
     enabled: true
@@ -20,6 +21,7 @@ export const auth = betterAuth({
       account,
       verification,
     }
-  })
+  }),
+  plugins: [nextCookies()]
 });
 
