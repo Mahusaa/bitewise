@@ -8,7 +8,6 @@ export default function SignOut() {
 
   const handleSignOut = async () => {
     await authClient.signOut()
-    router.refresh()
     router.push("/signin")
   }
 

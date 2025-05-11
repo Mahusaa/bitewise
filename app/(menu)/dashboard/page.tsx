@@ -13,17 +13,41 @@ import { calculateMealTotals } from "@/lib/calculate-meals-today"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { cacheTag } from "next/dist/server/use-cache/cache-tag"
+import { Suspense } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 
-export default async function DashboardPage() {
-  "use chache"
-  cacheTag('dashboard-data')
-  const session = await auth.api.getSession({
-    headers: await headers()
-  });
-  const userId = session?.user?.id;
-  if (!userId) {
-    throw new Error("Profile not found")
-  }
+function NutritionCardSkeleton() {
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg">Daily Goals</CardTitle>
+        <CardDescription>
+          {new Date().toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" })}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-3 w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-3 w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-3 w-full" />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+async function NutritionData({ userId }: { userId: string }) {
+  "use cache"
+  cacheTag('dashboard-data');
   const [meals, profile] = await Promise.all([
     getTodayMeals(userId),
     getProfile(userId),
@@ -35,6 +59,34 @@ export default async function DashboardPage() {
 
   const mealsToday = calculateMealTotals(meals);
   const nutritionGoals = calculateNutritionGoals(profile);
+
+  return (
+    <>
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">Daily Goals</CardTitle>
+          <CardDescription>
+            {new Date().toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" })}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <DailyNutritionProgress nutritionGoals={nutritionGoals} todayTotals={mealsToday} />
+        </CardContent>
+      </Card>
+      <MealsDrawer entries={meals} />
+    </>
+  );
+}
+
+export default async function DashboardPage() {
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("Profile not found")
+  }
 
   return (
     <div className="container max-w-md mx-auto px-4 py-6 pb-20">
@@ -50,19 +102,9 @@ export default async function DashboardPage() {
         </Link>
       </header>
 
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg">Daily Goals</CardTitle>
-          <CardDescription>
-            {new Date().toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" })}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <DailyNutritionProgress nutritionGoals={nutritionGoals} todayTotals={mealsToday} />
-        </CardContent>
-      </Card>
-      <MealsDrawer entries={meals} />
+      <Suspense fallback={<NutritionCardSkeleton />}>
+        <NutritionData userId={userId} />
+      </Suspense>
     </div>
   )
 }
-

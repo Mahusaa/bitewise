@@ -7,20 +7,20 @@ import { ChevronUp, Plus, Utensils } from "lucide-react"
 import { MealList } from "@/components/meal-list"
 
 export interface MealEntry {
-  id: number;
-  name: string;
-  calories: string;
-  protein: string;
-  carbs: string;
-  fat: string;
-  sugar: string;
-  categories: string;
-  createdAt: Date;
-  image: string | null;
+  id: number
+  name: string
+  calories: string
+  protein: string
+  carbs: string
+  fat: string
+  sugar: string
+  categories: string
+  createdAt: Date
+  image: string | null
 }
 
 interface MealsDrawerProps {
-  entries: MealEntry[];
+  entries: MealEntry[]
 }
 
 export function MealsDrawer({ entries }: MealsDrawerProps) {
@@ -45,8 +45,8 @@ export function MealsDrawer({ entries }: MealsDrawerProps) {
           </div>
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="max-h-[85vh] overflow-auto">
-        <DrawerHeader className="flex justify-between items-center">
+      <DrawerContent className="max-h-[85vh] flex flex-col">
+        <DrawerHeader className="flex justify-between items-center sticky top-0 z-10 bg-background border-b pb-4">
           <DrawerTitle>Todays Meals</DrawerTitle>
           <Button
             size="sm"
@@ -58,10 +58,11 @@ export function MealsDrawer({ entries }: MealsDrawerProps) {
             <Plus className="h-4 w-4 mr-1" /> Add Food
           </Button>
         </DrawerHeader>
-        <div className="px-4 pb-8">
+        <div className="flex-1 overflow-y-auto px-4 pb-8 pt-2">
           <MealList entries={entries} />
         </div>
       </DrawerContent>
     </Drawer>
   )
 }
+
