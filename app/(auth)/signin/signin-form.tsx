@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 
 export function LoginForm({
@@ -102,12 +101,6 @@ export function LoginForm({
                 </>
               )}
             </Button>
-          </div>
-          <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link href="/signup" className="underline underline-offset-4">
-              Sign up
-            </Link>
           </div>
         </CardContent>
       </Card>

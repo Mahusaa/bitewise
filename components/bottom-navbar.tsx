@@ -1,4 +1,3 @@
-// app/components/BottomNavbar.tsx
 "use client"
 
 import { usePathname, useRouter } from "next/navigation"
@@ -16,7 +15,7 @@ export function BottomNavbar() {
   const isActive = (path: string) => pathname.startsWith(path)
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t shadow-sm">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t shadow-sm">
       <div className="flex justify-between px-4">
         {navItems.map((item) => {
           const active = isActive(item.path)
@@ -26,12 +25,11 @@ export function BottomNavbar() {
             <button
               key={item.path}
               onClick={() => router.push(item.path)}
-              className={`flex flex-col items-center justify-center gap-1 py-2 w-full transition-colors duration-200 ${active ? "text-indigo-600" : "text-gray-400"
+              className={`flex flex-col items-center justify-center gap-1 py-2 w-full transition-colors duration-200 ${active ? "text-primary border-t-2 border-primary" : "text-muted-foreground"
                 }`}
             >
               <Icon className="w-5 h-5" />
               <span className="text-[11px] font-medium">{item.label}</span>
-              {active && <div className="w-full h-0.5 bg-indigo-600 rounded-t mt-1" />}
             </button>
           )
         })}

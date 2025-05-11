@@ -35,10 +35,6 @@ export const extractDataFromFood = async (
       };
     }
 
-    // const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
-    // const base64Image = imageBuffer.toString("base64");
-    // const dataURI = `data:${imageFile.type};base64,${base64Image}`;
-
     const result = await generateObject({
       model: openai("gpt-4.1-nano"),
       system: `You are a food data extraction assistant. Your task is to extract nutritional information from a food-related image. If data doesn't exist, just write "data as 0.`,

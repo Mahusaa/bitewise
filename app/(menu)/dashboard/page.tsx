@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Settings, Utensils } from "lucide-react"
+import { Utensils, LogOut } from "lucide-react"
 import { calculateNutritionGoals } from "@/lib/nutrition-calculator"
 import { DailyNutritionProgress } from "@/components/daily-nutrition-progress"
 import { MealsDrawer } from "@/components/meals-drawer"
@@ -97,7 +97,7 @@ export default async function DashboardPage() {
         </div>
         <Link href="/whoami">
           <Button variant="ghost" size="icon">
-            <Settings className="h-5 w-5" />
+            <LogOut className="h-5 w-5 text-red-600" />
           </Button>
         </Link>
       </header>

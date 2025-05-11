@@ -1,5 +1,5 @@
 "use client"
-import { useState, useActionState } from "react"
+import { useState, useActionState, useEffect } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, } from "@/components/ui/card"
 import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "./ui/select"
 import { Label } from "./ui/label"
@@ -7,6 +7,7 @@ import { Button } from "./ui/button"
 import type { MealData } from "@/app/actions/extract-food"
 import { Check, Loader2 } from "lucide-react"
 import { addFoodFromScan } from "@/app/actions/add-food"
+import { toast } from "sonner"
 
 type Props = {
   data: MealData;
@@ -20,7 +21,15 @@ const initialState = {
 export default function FoodAdder({ data }: Props) {
   const [mealType, setMealType] = useState("breakfast");
   const [addFoodState, addFoodAction, isPending] = useActionState(addFoodFromScan, initialState)
-  console.log(addFoodState)
+
+
+  useEffect(() => {
+    if (addFoodState.success) {
+      toast.success(addFoodState.message);
+    } else if (addFoodState.message) {
+      toast.error(addFoodState.message);
+    }
+  }, [addFoodState])
   return (
     <form action={addFoodAction}>
       <Card className="overflow-hidden">
