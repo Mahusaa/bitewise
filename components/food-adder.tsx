@@ -5,7 +5,7 @@ import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from ".
 import { Label } from "./ui/label"
 import { Button } from "./ui/button"
 import type { MealData } from "@/app/actions/extract-food"
-import { Check, Loader2 } from "lucide-react"
+import { Check, Loader2, PlusIcon } from "lucide-react"
 import { addFoodFromScan } from "@/app/actions/add-food"
 import { toast } from "sonner"
 
@@ -97,19 +97,29 @@ export default function FoodAdder({ data }: Props) {
           </div>
         </CardContent>
         <CardFooter className="bg-muted/30 pt-2">
-          <Button className="w-full" type="submit">
-            {isPending ? (
+          <Button
+            className="w-full"
+            type={addFoodState.success ? 'button' : 'submit'}
+            onClick={addFoodState.success ? () => window.location.reload() : undefined}
+          >
+            {addFoodState.success ? (
+              <>
+                <Check className="h-4 w-4 mr-2" />
+                Upload Another
+              </>
+            ) : isPending ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 Adding...
               </>
             ) : (
               <>
-                <Check className="h-4 w-4 mr-2" />
+                <PlusIcon className="h-4 w-4 mr-2" />
                 Add to {mealType}
               </>
             )}
           </Button>
+
         </CardFooter>
       </Card>
       <input type="hidden" name="name" value={data.name} />

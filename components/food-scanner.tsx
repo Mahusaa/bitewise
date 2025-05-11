@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Camera, FileImage, Scan, X, Loader2 } from "lucide-react"
 import { extractDataFromFood } from "@/app/actions/extract-food"
 import FoodAdder from "./food-adder"
+import imageCompression from 'browser-image-compression'
 
 const initialState = {
   success: false,
@@ -21,15 +22,36 @@ export function FoodScanner() {
   const galleryInputRef = useRef<HTMLInputElement>(null)
 
 
-  const handleImageCapture = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+  const handleImageCapture = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const imageFile = e.target.files?.[0]
+    if (!imageFile) return
 
-    const reader = new FileReader()
-    reader.onload = () => {
-      setCapturedImage(reader.result as string)
+
+    const fileSizeMB = imageFile.size / (1024 * 1024);
+
+    try {
+      let finalFile = imageFile;
+
+      if (fileSizeMB > 1) {
+        const options = {
+          maxSizeMB: 1,
+          useWebWorker: true,
+        }
+        finalFile = await imageCompression(imageFile, options)
+        const reader = new FileReader()
+        reader.onload = () => {
+          setCapturedImage(reader.result as string)
+        }
+        reader.readAsDataURL(finalFile)
+      }
+      const reader = new FileReader()
+      reader.onload = () => {
+        setCapturedImage(reader.result as string)
+      }
+      reader.readAsDataURL(finalFile)
+    } catch (error) {
+      console.error('Image compression error:', error)
     }
-    reader.readAsDataURL(file)
   }
 
   const triggerCameraInput = () => {
@@ -50,7 +72,7 @@ export function FoodScanner() {
   };
 
   const resetScan = () => {
-    setCapturedImage(null)
+    setCapturedImage(null);
   }
 
   return (
