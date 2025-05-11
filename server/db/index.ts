@@ -16,6 +16,5 @@ if (!databaseUrl) {
 const conn = neon(databaseUrl);
 
 
-// Initialize Drizzle with schema
 export const db = drizzle(conn, { schema });
 
