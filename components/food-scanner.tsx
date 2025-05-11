@@ -18,6 +18,7 @@ export function FoodScanner() {
   const [capturedImage, setCapturedImage] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition();
   const [extractState, extractAction] = useActionState(extractDataFromFood, initialState)
+  const [isUploading, setIsUploading] = useState<boolean>(false)
   const cameraInputRef = useRef<HTMLInputElement>(null)
   const galleryInputRef = useRef<HTMLInputElement>(null)
 
@@ -25,6 +26,8 @@ export function FoodScanner() {
   const handleImageCapture = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const imageFile = e.target.files?.[0]
     if (!imageFile) return
+
+    setIsUploading(true)
 
 
     const fileSizeMB = imageFile.size / (1024 * 1024);
@@ -43,12 +46,14 @@ export function FoodScanner() {
           setCapturedImage(reader.result as string)
         }
         reader.readAsDataURL(finalFile)
+        setIsUploading(false)
       }
       const reader = new FileReader()
       reader.onload = () => {
         setCapturedImage(reader.result as string)
       }
       reader.readAsDataURL(finalFile)
+      setIsUploading(false)
     } catch (error) {
       console.error('Image compression error:', error)
     }
@@ -73,6 +78,7 @@ export function FoodScanner() {
 
   const resetScan = () => {
     setCapturedImage(null);
+    window.location.reload()
   }
 
   return (
@@ -95,8 +101,14 @@ export function FoodScanner() {
           className="hidden"
         />
 
+        {isUploading && (
+          <div className="absolute inset-0 bg-white/80 z-10 flex items-center justify-center rounded-lg">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          </div>
+        )}
+
         {!capturedImage ? (
-          <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 text-center">
+          <div className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 text-center ${isUploading ? 'pointer-events-none opacity-50' : ''}`}>
             <div className="flex justify-center items-center space-x-2 mb-4">
               <Camera className="h-8 w-8 text-muted-foreground" />
             </div>
