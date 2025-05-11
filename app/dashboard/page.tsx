@@ -11,6 +11,7 @@ import { getProfile } from "@/server/db/queries"
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import { calculateMealTotals } from "@/lib/calculate-meals-today"
+import Link from "next/link"
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({
@@ -36,9 +37,11 @@ export default async function DashboardPage() {
           <Utensils className="h-6 w-6 text-green-500 mr-2" />
           <h1 className="text-xl font-bold">BiteWise</h1>
         </div>
-        <Button variant="ghost" size="icon">
-          <Settings className="h-5 w-5" />
-        </Button>
+        <Link href="/whoami">
+          <Button variant="ghost" size="icon">
+            <Settings className="h-5 w-5" />
+          </Button>
+        </Link>
       </header>
 
       <Card>

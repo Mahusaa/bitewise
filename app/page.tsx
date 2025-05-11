@@ -10,16 +10,13 @@ export default async function Home() {
   const userId = session?.user?.id;
 
   if (!userId) {
-    console.log("user not auth")
-    return null
+    redirect("/signin")
   };
   const profile = await hasProfile(userId)
 
   if (!profile) {
-    console.log("U dont have profile")
     redirect("/onboarding")
   } else {
-    console.log("u have profile")
     redirect("/dashboard")
   }
 }
