@@ -3,7 +3,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Settings, Utensils } from "lucide-react"
 import { calculateNutritionGoals } from "@/lib/nutrition-calculator"
 import { DailyNutritionProgress } from "@/components/daily-nutrition-progress"
-import { BottomNavbar } from "@/components/bottom-navbar"
 import { MealsDrawer } from "@/components/meals-drawer"
 import { Button } from "@/components/ui/button"
 import { getTodayMeals } from "@/server/db/queries"
@@ -12,8 +11,12 @@ import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import { calculateMealTotals } from "@/lib/calculate-meals-today"
 import Link from "next/link"
+import { redirect } from "next/navigation"
+import { cacheTag } from "next/dist/server/use-cache/cache-tag"
 
 export default async function DashboardPage() {
+  "use chache"
+  cacheTag('dashboard-data')
   const session = await auth.api.getSession({
     headers: await headers()
   });
@@ -21,14 +24,17 @@ export default async function DashboardPage() {
   if (!userId) {
     throw new Error("Profile not found")
   }
-  const meals = await getTodayMeals(userId);
-  const mealsToday = calculateMealTotals(meals)
+  const [meals, profile] = await Promise.all([
+    getTodayMeals(userId),
+    getProfile(userId),
+  ]);
 
-  const profile = await getProfile(userId);
   if (!profile) {
-    throw new Error("Profile not found")
+    redirect("/onboarding");
   }
-  const nutritionGoals = calculateNutritionGoals(profile)
+
+  const mealsToday = calculateMealTotals(meals);
+  const nutritionGoals = calculateNutritionGoals(profile);
 
   return (
     <div className="container max-w-md mx-auto px-4 py-6 pb-20">
@@ -56,7 +62,6 @@ export default async function DashboardPage() {
         </CardContent>
       </Card>
       <MealsDrawer entries={meals} />
-      <BottomNavbar />
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { meals } from "@/server/db/schema";
 import { db } from "@/server/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { revalidateTag } from "next/cache";
 
 export interface ActionResponse {
   success: boolean;
@@ -42,6 +43,8 @@ export const addFoodFromScan = async (
       fat: fat,
       sugar: sugar,
     });
+
+    revalidateTag("dashboard-data")
 
     return {
       success: true,

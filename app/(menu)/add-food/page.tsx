@@ -1,22 +1,19 @@
-"use client"
 
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft } from "lucide-react"
 import { FoodScanner } from "@/components/food-scanner"
-import { BottomNavbar } from "@/components/bottom-navbar"
+import Link from "next/link"
 
 export default function AddFoodPage() {
-  const router = useRouter()
-
-
   return (
     <div className="container max-w-md mx-auto px-4 py-6 pb-20">
       <header className="flex items-center mb-6">
-        <Button variant="ghost" size="icon" onClick={() => router.push("/dashboard")}>
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
+        <Link href="/dashboard">
+          <Button variant="ghost" size="icon">
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+        </Link>
         <h1 className="text-xl font-bold ml-2">Add Food</h1>
       </header>
 
@@ -30,8 +27,6 @@ export default function AddFoodPage() {
           <FoodScanner />
         </CardContent>
       </Card>
-
-      <BottomNavbar />
     </div>
   )
 }
