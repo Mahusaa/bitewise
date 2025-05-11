@@ -85,7 +85,7 @@ export default async function DashboardPage() {
 
   const userId = session?.user?.id;
   if (!userId) {
-    throw new Error("Profile not found")
+    redirect("/whoami")
   }
 
   return (
