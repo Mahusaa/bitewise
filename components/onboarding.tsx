@@ -9,9 +9,10 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { saveProfile } from "@/app/actions/add-profile"
 import { ArrowRight, Leaf } from "lucide-react"
-import { saveUserProfile } from "@/server/db/queries"
 import { Loader2 } from "lucide-react"
+import { toast } from "sonner"
 
 export default function Onboarding({ userId }: { userId: string }) {
   const router = useRouter()
@@ -37,10 +38,17 @@ export default function Onboarding({ userId }: { userId: string }) {
     } else {
       startTransition(async () => {
         try {
-          await saveUserProfile(profile)
-          router.push("/dashboard")
+          const result = await saveProfile(profile)
+
+          if (result.success) {
+            router.push("/dashboard")
+            toast.success("Profile created successfully!")
+          } else {
+            toast.error(result.message || "Failed to save profile")
+          }
         } catch (error) {
           console.error("Failed to save profile", error)
+          toast?.error("An unexpected error occurred")
         }
       })
     }
