@@ -14,8 +14,6 @@ export interface NewUserProfile {
 }
 
 
-
-
 export async function saveProfile(formData: FormData | NewUserProfile) {
   let profile: NewUserProfile;
 
@@ -34,7 +32,6 @@ export async function saveProfile(formData: FormData | NewUserProfile) {
   }
 
   try {
-    // Validate the input data
     await saveUserProfile(profile)
 
     revalidatePath('/profile');

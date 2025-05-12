@@ -43,7 +43,7 @@ export function DailyNutritionProgress({ nutritionGoals, todayTotals }: DailyNut
             {todayTotals.protein.toFixed(1)} / {nutritionGoals.protein} g
           </span>
         </div>
-        <Progress value={proteinPercentage} className="h-2 bg-muted" indicatorClassName="bg-green-500" />
+        <Progress value={proteinPercentage} className="h-2" indicatorClassName="bg-green-500" />
       </div>
 
       <div className="space-y-2">
@@ -53,7 +53,7 @@ export function DailyNutritionProgress({ nutritionGoals, todayTotals }: DailyNut
             {todayTotals.carbs.toFixed(1)} / {nutritionGoals.carbs} g
           </span>
         </div>
-        <Progress value={carbsPercentage} className="h-2 bg-muted" indicatorClassName="bg-amber-500" />
+        <Progress value={carbsPercentage} className="h-2" indicatorClassName="bg-amber-500" />
       </div>
 
       <div className="space-y-2">
@@ -63,7 +63,7 @@ export function DailyNutritionProgress({ nutritionGoals, todayTotals }: DailyNut
             {todayTotals.fat.toFixed(1)} / {nutritionGoals.fat} g
           </span>
         </div>
-        <Progress value={fatPercentage} className="h-2 bg-muted" indicatorClassName="bg-rose-500" />
+        <Progress value={fatPercentage} className="h-2" indicatorClassName="bg-rose-500" />
       </div>
 
       <div className="space-y-2">

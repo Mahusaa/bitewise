@@ -102,7 +102,7 @@ export function FoodScanner() {
         />
 
         {isUploading && (
-          <div className="absolute inset-0 bg-white/80 z-10 flex items-center justify-center rounded-lg">
+          <div className="absolute inset-0 bg-muted/80 z-10 flex items-center justify-center rounded-lg">
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
         )}

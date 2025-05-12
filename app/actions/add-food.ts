@@ -48,7 +48,7 @@ export const addFoodFromScan = async (
 
     return {
       success: true,
-      message: "Food data extracted successfully.",
+      message: "Succesfully added food",
     };
   } catch (err) {
     console.error("❌ Error extracting resume:", err);

@@ -33,64 +33,74 @@ export default function FoodAdder({ data }: Props) {
   return (
     <form action={addFoodAction}>
       <Card className="overflow-hidden">
-        <CardHeader className="bg-muted/50 pb-2">
+        <CardHeader>
           <CardTitle className="text-lg flex items-center">
             {data.name}
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-4 space-y-4">
+        <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
+            <div className="flex flex-col gap-2 w-full">
               <Label htmlFor="meal-type">Add to</Label>
               <Select value={mealType} onValueChange={setMealType}>
-                <SelectTrigger id="meal-type">
+                <SelectTrigger id="meal-type" className="w-full">
                   <SelectValue placeholder="Select meal" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="breakfast">Breakfast</SelectItem>
-                  <SelectItem value="lunch">Lunch</SelectItem>
-                  <SelectItem value="dinner">Dinner</SelectItem>
-                  <SelectItem value="snacks">Snacks</SelectItem>
+                  {["breakfast", "lunch", "dinner", "snacks"].map((meal) => (
+                    <SelectItem key={meal} value={meal}>
+                      {meal.charAt(0).toUpperCase() + meal.slice(1)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
           </div>
 
-          <div className="bg-muted rounded-lg overflow-hidden">
-            <div className="bg-muted/80 px-4 py-2 border-b">
+
+          <div className="rounded-lg overflow-hidden border">
+            <div className="bg-primary text-primary-foreground p-3">
               <h4 className="font-medium">Nutritional Information</h4>
             </div>
-            <div className="p-4">
-              <div className="grid grid-cols-1 gap-2">
-                <div className="flex justify-between items-center py-1 border-b">
-                  <span className="font-medium">Calories</span>
-                  <span className="text-right">
-                    {data.calories} kcal
-                  </span>
+            <div className="p-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-lg font-medium">Calories</span>
+                <span className="text-lg font-bold">
+                  {data.calories} kcal
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-y-3 text-sm">
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+                  <span>Protein</span>
                 </div>
-                <div className="flex justify-between items-center py-1 border-b">
-                  <span className="font-medium">Protein</span>
-                  <span className="text-right">
-                    {data.protein}g
-                  </span>
+                <div className="text-right font-medium">
+                  {data.protein}g
                 </div>
-                <div className="flex justify-between items-center py-1 border-b">
-                  <span className="font-medium">Carbs</span>
-                  <span className="text-right">
-                    {data.carbs}g
-                  </span>
+
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-amber-500 mr-2"></div>
+                  <span>Carbs</span>
                 </div>
-                <div className="flex justify-between items-center py-1 border-b">
-                  <span className="font-medium">Fat</span>
-                  <span className="text-right">
-                    {data.fat}g
-                  </span>
+                <div className="text-right font-medium">
+                  {data.carbs}g
                 </div>
-                <div className="flex justify-between items-center py-1">
-                  <span className="font-medium">Sugar</span>
-                  <span className="text-right">
-                    {data.sugar}g
-                  </span>
+
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-rose-500 mr-2"></div>
+                  <span>Fat</span>
+                </div>
+                <div className="text-right font-medium">
+                  {data.fat}g
+                </div>
+
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-blue-400 mr-2"></div>
+                  <span>Sugar</span>
+                </div>
+                <div className="text-right font-medium">
+                  {data.sugar}g
                 </div>
               </div>
             </div>

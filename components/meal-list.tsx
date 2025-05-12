@@ -55,8 +55,8 @@ export function MealList({ entries }: MealListProps) {
                           />
                         </div>
                       ) : (
-                        <div className="h-14 w-14 rounded-lg bg-gray-100 flex items-center justify-center mr-4 flex-shrink-0">
-                          <Utensils className="text-gray-400 h-6 w-6" />
+                        <div className="h-14 w-14 rounded-lg bg-muted flex items-center justify-center mr-4 flex-shrink-0">
+                          <Utensils className="text-primary h-6 w-6" />
                         </div>
                       )}
 
