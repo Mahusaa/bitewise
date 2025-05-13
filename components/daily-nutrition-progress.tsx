@@ -33,7 +33,7 @@ export function DailyNutritionProgress({ nutritionGoals, todayTotals }: DailyNut
             {todayTotals.calories.toFixed(1)} / {nutritionGoals.calories} kcal
           </span>
         </div>
-        <Progress value={caloriesPercentage} className="h-2" />
+        <Progress value={caloriesPercentage} className="h-2" indicatorClassName="bg-yellow-500" />
       </div>
 
       <div className="space-y-2">
@@ -53,7 +53,7 @@ export function DailyNutritionProgress({ nutritionGoals, todayTotals }: DailyNut
             {todayTotals.carbs.toFixed(1)} / {nutritionGoals.carbs} g
           </span>
         </div>
-        <Progress value={carbsPercentage} className="h-2" indicatorClassName="bg-amber-500" />
+        <Progress value={carbsPercentage} className="h-2" indicatorClassName="bg-blue-500" />
       </div>
 
       <div className="space-y-2">

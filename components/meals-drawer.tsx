@@ -36,7 +36,7 @@ export function MealsDrawer({ entries }: MealsDrawerProps) {
           onClick={() => setOpen(true)}
         >
           <div className="flex items-center">
-            <Utensils className="h-5 w-5 text-green-500 mr-2" />
+            <Utensils className="h-5 w-5 text-primary mr-2" />
             <span>Todays Meals</span>
           </div>
           <div className="flex items-center">

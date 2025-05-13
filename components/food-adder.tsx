@@ -2,10 +2,11 @@
 import { useState, useActionState, useEffect } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, } from "@/components/ui/card"
 import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent } from "./ui/select"
+import { Alert, AlertTitle, AlertDescription } from "./ui/alert"
 import { Label } from "./ui/label"
 import { Button } from "./ui/button"
 import type { MealData } from "@/app/actions/extract-food"
-import { Check, Loader2, PlusIcon } from "lucide-react"
+import { Check, Loader2, PlusIcon, AlertCircle } from "lucide-react"
 import { addFoodFromScan } from "@/app/actions/add-food"
 import { toast } from "sonner"
 
@@ -25,11 +26,36 @@ export default function FoodAdder({ data }: Props) {
 
   useEffect(() => {
     if (addFoodState.success) {
+      console.log("this is the error", data.error)
       toast.success(addFoodState.message);
     } else if (addFoodState.message) {
       toast.error(addFoodState.message);
     }
-  }, [addFoodState])
+  }, [addFoodState, data.error])
+  if (data.error) {
+    return (
+      <Card className="overflow-hidden">
+        <CardContent>
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4 text-destructive" />
+            <AlertTitle>Unable to identified</AlertTitle>
+            <AlertDescription>
+              {data.error}
+            </AlertDescription>
+          </Alert>
+        </CardContent>
+        <CardFooter className="pt-2">
+          <Button
+            variant="destructive"
+            className="w-full"
+            onClick={() => window.location.reload()}
+          >
+            Try Again
+          </Button>
+        </CardFooter>
+      </Card>)
+  }
+
   return (
     <form action={addFoodAction}>
       <Card className="overflow-hidden">

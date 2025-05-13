@@ -30,29 +30,37 @@ export interface FoodEntry {
   image?: string
 }
 
-export const extractMealSchema = z.object({
-  name: z.string().max(255).describe("Name of the meal"),
-  calories: z
-    .string()
-    .regex(/^\d+(\.\d{1,2})?$/)
-    .describe("Total calories, decimal with max 2 digits after decimal in kcal"),
-  protein: z
-    .string()
-    .regex(/^\d+(\.\d{1,2})?$/)
-    .describe("Protein content in grams"),
-  carbs: z
-    .string()
-    .regex(/^\d+(\.\d{1,2})?$/)
-    .describe("Carbohydrates in grams"),
-  fat: z
-    .string()
-    .regex(/^\d+(\.\d{1,2})?$/)
-    .describe("Fat content in grams"),
-  sugar: z
-    .string()
-    .regex(/^\d+(\.\d{1,2})?$/)
-    .describe("Sugar content in grams"),
-})
+
+export const extractMealSchema = z
+  .object({
+    name: z.string().max(255).describe("Name of the meal").optional(),
+    calories: z
+      .string()
+      .regex(/^\d+(\.\d{1,2})?$/)
+      .describe("Total calories in kcal")
+    ,
+    protein: z
+      .string()
+      .regex(/^\d+(\.\d{1,2})?$/)
+      .describe("Protein in grams")
+    ,
+    carbs: z
+      .string()
+      .regex(/^\d+(\.\d{1,2})?$/)
+      .describe("Carbohydrates in grams")
+    ,
+    fat: z
+      .string()
+      .regex(/^\d+(\.\d{1,2})?$/)
+      .describe("Fat in grams")
+    ,
+    sugar: z
+      .string()
+      .regex(/^\d+(\.\d{1,2})?$/)
+      .describe("Sugar in grams")
+    ,
+    error: z.string().optional().describe("Explanation if extraction failed"),
+  })
 
 
 export const SignUpSchema = z.object({

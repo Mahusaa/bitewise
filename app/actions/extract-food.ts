@@ -5,12 +5,13 @@ import { generateObject } from "ai";
 import { extractMealSchema } from "@/lib/types";
 
 export interface MealData {
-  name: string;
+  name?: string;
   calories: string;
   protein: string;
   carbs: string;
   fat: string;
   sugar: string;
+  error?: string;
 }
 
 
@@ -37,7 +38,7 @@ export const extractDataFromFood = async (
 
     const result = await generateObject({
       model: openai("gpt-4.1-nano"),
-      system: `You are a food data extraction assistant. Your task is to extract nutritional information from a food-related image. If data doesn't exist, just write "data as 0.`,
+      system: `You are a food data extraction assistant. Your task is to extract nutritional information from a food-related image. Either return all fields properly or return only an error with the specify format`,
       schema: extractMealSchema,
       messages: [
         {

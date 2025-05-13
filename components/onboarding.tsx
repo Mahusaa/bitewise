@@ -75,9 +75,9 @@ export default function Onboarding({ userId }: { userId: string }) {
           <CardTitle>Create Your Profile</CardTitle>
           <CardDescription>We&apos;ll use this information to calculate your nutritional needs</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="w-full">
           <Tabs value={`step-${step}`} className="w-full">
-            <TabsList className="grid grid-cols-3 mb-8">
+            <TabsList className="grid grid-cols-3 mb-8 w-full">
               <TabsTrigger value="step-1" disabled>
                 Basic Info
               </TabsTrigger>
@@ -148,7 +148,7 @@ export default function Onboarding({ userId }: { userId: string }) {
               <div className="space-y-2">
                 <Label htmlFor="activity">Activity Level</Label>
                 <Select value={profile.activityLevel} onValueChange={(value) => handleChange("activityLevel", value)}>
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select activity level" />
                   </SelectTrigger>
                   <SelectContent>
@@ -164,7 +164,7 @@ export default function Onboarding({ userId }: { userId: string }) {
               <div className="space-y-2">
                 <Label htmlFor="goal">Fitness Goal</Label>
                 <Select value={profile.goal} onValueChange={(value) => handleChange("goal", value)}>
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select your goal" />
                   </SelectTrigger>
                   <SelectContent>
